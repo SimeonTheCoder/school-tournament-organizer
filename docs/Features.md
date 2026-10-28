@@ -1,0 +1,13 @@
+- Dynamic Scoreboard
+- Analysis of teams to see how good they work together
+- Presented Odds
+- Bracket visualization
+- Custom Pages
+	- Made out of blocks
+		- Image blocks
+		- Text blocks
+		- Timer blocks
+		- Counter blocks
+	- Banner
+- Calendar
+- News

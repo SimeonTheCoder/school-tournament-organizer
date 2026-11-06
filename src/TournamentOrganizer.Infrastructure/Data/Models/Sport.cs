@@ -1,8 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TournamentOrganizer.Infrastructure.Data.Constants;
 using TournamentOrganizer.Infrastructure.Data.Enums;
 
 namespace TournamentOrganizer.Infrastructure.Data.Models;
+
+using static SizeConstants.SportConstants;
 
 public class Sport
 {
@@ -15,6 +18,7 @@ public class Sport
     public string Id {get; set;} = string.Empty;
 
     [Required]
+    [StringLength(SportNameMaxLength, MinimumLength = SportNameMinLength)]
     public string Name {get; set;} = string.Empty;
 
     [Required]

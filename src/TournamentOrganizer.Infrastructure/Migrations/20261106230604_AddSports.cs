@@ -15,7 +15,7 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ScoringType = table.Column<int>(type: "int", nullable: false),
                     FollowableId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },

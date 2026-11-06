@@ -14,5 +14,5 @@ public class Followable
     public string Id { get; set; } = string.Empty;
 
     [Required]
-    public FollowableType followableType;
+    public FollowableType FollowableType {get; set;}
 }

@@ -160,9 +160,66 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("FollowableType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Followable");
+                });
+
+            modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.Sport", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FollowableId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ScoringType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FollowableId");
+
+                    b.ToTable("Sports");
+                });
+
+            modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.Team", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CreatedByUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FollowableId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("FollowableId");
+
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.User", b =>
@@ -177,7 +234,6 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Class")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -192,7 +248,6 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FollowableId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -241,6 +296,34 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.UserFollowed", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FollowableId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("FollowedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FollowableId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserFollowed");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -294,7 +377,44 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.Sport", b =>
+                {
+                    b.HasOne("TournamentOrganizer.Infrastructure.Data.Models.Followable", "Followable")
+                        .WithMany()
+                        .HasForeignKey("FollowableId");
+
+                    b.Navigation("Followable");
+                });
+
+            modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.Team", b =>
+                {
+                    b.HasOne("TournamentOrganizer.Infrastructure.Data.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TournamentOrganizer.Infrastructure.Data.Models.Followable", "Followable")
+                        .WithMany()
+                        .HasForeignKey("FollowableId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Followable");
+                });
+
             modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.User", b =>
+                {
+                    b.HasOne("TournamentOrganizer.Infrastructure.Data.Models.Followable", "Followable")
+                        .WithMany()
+                        .HasForeignKey("FollowableId");
+
+                    b.Navigation("Followable");
+                });
+
+            modelBuilder.Entity("TournamentOrganizer.Infrastructure.Data.Models.UserFollowed", b =>
                 {
                     b.HasOne("TournamentOrganizer.Infrastructure.Data.Models.Followable", "Followable")
                         .WithMany()
@@ -302,7 +422,15 @@ namespace TournamentOrganizer.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("TournamentOrganizer.Infrastructure.Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Followable");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

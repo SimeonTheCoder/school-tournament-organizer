@@ -18,4 +18,9 @@ public class TournamentOrganizerDbContext : IdentityDbContext<User>
     {
         base.OnModelCreating(modelBuilder);
     }
+
+    public DbSet<Followable> Followable {get; set;}
+    public DbSet<UserFollowed> UserFollowed {get; set;}
+    public DbSet<Sport> Sports {get; set;}
+    public DbSet<Team> Teams {get; set;}
 }
